@@ -142,12 +142,10 @@ NOTES:
  *   Max ops: 14
  *   Rating: 1
  */
-int bitXor(int x, int y) {    // x = 0x0010
-                              // y = 0x1010
-                              // x xor y    = 0x1000
-  int z = ~(x & y);           // ~(x & y)   = 0x1101
-  int z1 = ~(~x & ~y);        // ~(~x & ~y) = 0x1010
-  return z & z1;              // z & z1     = 0x0100
+int bitXor(int x, int y) {
+  int z = ~(x & y);           // ~(x & y)   = ~x | ~y
+  int z1 = ~(~x & ~y);        // ~(~x & ~y) = x | y
+  return z & z1;              // z & z1     = (~x | ~y) & (x | y)
 }
 
 /* 
@@ -157,9 +155,7 @@ int bitXor(int x, int y) {    // x = 0x0010
  *   Rating: 1
  */
 int tmin(void) {
-
-  return 2;
-
+  return 1 << 31;
 }
 //2
 /*
@@ -170,7 +166,8 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  return 2;
+  int tmax = ~(1<<31);
+  return !(x ^ tmax);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
