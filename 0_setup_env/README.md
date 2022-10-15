@@ -143,3 +143,11 @@
     ```properties
     vim .ssh/known_hosts
     ```
+
+    connect to server in terminal
+
+    ```properties
+    ssh root@127.0.0.1 -p 7777
+    ```
+
+    reconnect in vscode using remote ssh
