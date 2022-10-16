@@ -214,7 +214,8 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int mask = !x + ~0;   // x is not 0, !x == 0, mask = 0xffffffff, else mask = 0x0
+  return (y & mask) | (z & ~mask);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -224,7 +225,12 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+	int xsign = (x >> 31) & 1;             // if x is negative xsign = 1, else 0
+	int ysign = (y >> 31) & 1;             // if y is negative ysign = 1, else 0
+  int sameSign = !(ysign ^ xsign);       // if x, y same sign, sameSign = 1, else 0
+  int lessEqual = ((x + ~y) >> 31) & 1;  // ~y = -y-1, x-y-1 < 0, so that x < y+1, so that x <= y
+  int z = sameSign & lessEqual;          // if sameSign and x <= y, z = 1, else 0
+  return z | ((!ysign) & xsign);         // return 1 if (z is 1) or (y is not negative and x is negative)
 }
 //4
 /* 
