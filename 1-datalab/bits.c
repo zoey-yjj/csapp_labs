@@ -245,7 +245,7 @@ int logicalNeg(int x) {
   int neg = (~x + 1);           // -x
   int doubleNeg = ~neg;         //  x-1
   int neg1 = ~x;                // -x-1
-  return ((doubleNeg & neg1) >> 31) & 0x1; // if x-1<0 & -x-1<0, so that -1<x<1 sign=1, else sign=0
+  return ((doubleNeg & neg1) >> 31) & 0x1; // if x-1<0 & -x-1<0, so that -1<x<1, sign=1, else sign=0
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -260,7 +260,28 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+  int sign = x >> 31;            // if negative sign = 1, else sign = 0
+  x = (sign & ~x) | (~sign & x); // x = (1 + ~x) when x is neg OR (~0 & x) when x is not neg
+  
+  // Binary Search on bit level log2(n)
+  int bit16 = !!(x >> 16) << 4;  // !! double negate x bit 17-31, if x is not 0, bit16 = 1 << 4 = 0x10000 = 16, else 0
+  x = x >> bit16;                // x >> 16 or x
+  
+  int bit8 = !!(x >> 8) << 3;    // bit8 = 1 << 3 = 0x1000 = 8, else 0
+  x = x >> bit8;                 // x >> 8 or x
+  
+  int bit4 = !!(x >> 4) << 2;    // bit4 = 1 << 2 = 0x100 = 4, else 0
+  x = x >> bit4;                 // x >> 4 or x
+  
+  int bit2 = !!(x >> 2) << 1;    // bit2 = 1 << 1 = 0x10 = 2, else 0
+  x = x >> bit2;                 // x >> 2 or x
+  
+  int bit1 = !!(x >> 1);         // bit1 = 1, else 0
+  x = x >> bit1;                 // x >> 1 or x
+  
+  int bit0 = x;
+
+  return bit16 + bit8 + bit4 + bit2 + bit1 + bit0 + 1; // add 1 to the final result need MSB to represent the sign
 }
 //float
 /* 
