@@ -330,20 +330,20 @@ unsigned floatScale2(unsigned uf) {
  */
 int floatFloat2Int(unsigned uf) {
   int sign = uf >> 31;
-  int exp = ((uf >> 23) & 0xff) - 127;
-  int frac = (uf & 0x007fffff) | 0x00800000;
+  int exponent = ((uf >> 23) & 0xff) - 127;       // IEEE754 bit32 exponent bias = -127
+  int fraction = (uf & 0x007fffff) | 0x00800000;  // only lower 23 bits
   int value = 0;
 
-  if (exp < 0) {
-    return 0;
-  } else if (exp > 30) {
-    return 0x80000000;
+  if (exponent < 0) {
+    return 0;                   // exponent less than 0, the int part is 0
+  } else if (exponent > 30) {
+    return 0x80000000;          // Handle out-of-range values
   } 
   
-  if (exp < 23) {
-    value = frac >> (23 - exp);
-  } else if (exp > 23) {
-    value = frac << (exp - 23);
+  if (exponent < 23) {                    // get int part of fraction`
+    value = fraction >> (23 - exponent);  // shift left only get the int part
+  } else if (exponent > 23) {
+    value = fraction << (exponent - 23);  // shift right for exponent increase
   }
   return sign ? -value : value;
 }
@@ -361,5 +361,9 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-    return 2;
+  unsigned exponent;
+  if (x > 127) exponent = 255;     // 0xff
+  else if (x < -126) exponent = 0;
+  else exponent = x + 127;         // exponent biase 127
+  return exponent << 23;
 }
