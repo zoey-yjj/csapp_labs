@@ -1,1 +1,60 @@
-This is an x86-64 bomb for self-study students. 
+<!-- This is an x86-64 bomb for self-study students.  -->
+
+# **Bomb Lab**
+
+## **introduction**
+
+`bomb` : Binaries, the "bomb" to defuse
+
+`bomb.c` : The source code of the main function of the program
+
+6 phases + bonus
+
+## **tools used**
+
+`objdump` : for disassembly
+
+`gdb` : for program debugging
+
+## **phase 1**
+
+- understand how bomb.c works
+
+    ```properties
+    initialize_bomb();     // initialise bomb
+    input = read_line();   // read from input
+    phase_1(input);        // phase 1 bomb
+    phase_defused();       // defuse phase 1 bomb
+    ```
+
+- need to understand how bomb works to defuse it, disassembly bomb object to assembly file
+
+    ```properties
+    objdump -d bomb > bomb.as
+    ```
+    
+- find `phase_1` in assembly code
+
+    ```properties
+    0000000000400ee0 <phase_1>:
+    400ee0:	48 83 ec 08          	sub    $0x8,%rsp
+    400ee4:	be 00 24 40 00       	mov    $0x402400,%esi
+    400ee9:	e8 4a 04 00 00       	callq  401338 <strings_not_equal>
+    400eee:	85 c0                	test   %eax,%eax
+    400ef0:	74 05                	je     400ef7 <phase_1+0x17>
+    400ef2:	e8 43 05 00 00       	callq  40143a <explode_bomb>
+    400ef7:	48 83 c4 08          	add    $0x8,%rsp
+    400efb:	c3                   	retq   
+    ```
+
+## **phase 2**
+
+## **phase 3**
+
+## **phase 4**
+
+## **phase 5**
+
+## **phase 6**
+
+## **bonus**
