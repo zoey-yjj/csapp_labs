@@ -138,6 +138,8 @@
         Port 7777
     ```
 
+## **Issues encountered**
+
 - solution for rebuild container and update ssh in host
 
     ```properties
@@ -151,3 +153,9 @@
     ```
 
     reconnect in vscode using remote ssh
+
+- solution to gdb error disbling address space randomization
+
+    ```properties
+    docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
+    ```

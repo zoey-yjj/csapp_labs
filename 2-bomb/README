@@ -47,6 +47,18 @@
     400efb:	c3                   	retq   
     ```
 
+- in assembly code `<strings_not_equal>`, if strings not equal will trigger `<explode_bomb>`
+
+- use gdb to check the strings
+
+    ```properties
+    $ gdb bomb
+    (gdb) break strings_not_equal
+    (gdb) r
+    (gdb) p/s (char*)$rdi
+    (gdb) p/s (char*)$rsi
+    ```
+
 ## **phase 2**
 
 ## **phase 3**
