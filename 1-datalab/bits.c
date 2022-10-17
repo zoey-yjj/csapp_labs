@@ -340,7 +340,7 @@ int floatFloat2Int(unsigned uf) {
     return 0x80000000;          // Handle out-of-range values
   } 
   
-  if (exponent < 23) {                    // get int part of fraction`
+  if (exponent < 23) {                    // get int part of fraction
     value = fraction >> (23 - exponent);  // shift left only get the int part
   } else if (exponent > 23) {
     value = fraction << (exponent - 23);  // shift right for exponent increase
@@ -361,7 +361,7 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-  unsigned exponent;
+  unsigned exponent;               // range -126 to 127
   if (x > 127) exponent = 255;     // 0xff
   else if (x < -126) exponent = 0;
   else exponent = x + 127;         // exponent biase 127
