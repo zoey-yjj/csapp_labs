@@ -279,7 +279,7 @@ int howManyBits(int x) {
   int bit1 = !!(x >> 1);         // bit1 = 1, else 0
   x = x >> bit1;                 // x >> 1 or x
   
-  int bit0 = x;
+  int bit0 = x;                  // bit0 = 1 if x, else 0
 
   return bit16 + bit8 + bit4 + bit2 + bit1 + bit0 + 1; // add 1 to the final result need MSB to represent the sign
 }
@@ -296,7 +296,20 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+  unsigned sign = uf & 0x80000000;              // Extract the sign bit 0x1000, sign = 1 bit
+  unsigned exponent = (uf & 0x7F800000) >> 23;  // Extract the exponent field 0x0111 1111 1000, exponent = 8 bits
+  unsigned fraction = uf & 0x007FFFFF;          // Extract the fraction field, fraction = 23 bits
+
+  if (exponent == 0xFF) {
+    return uf;                    // NaN or infinity, return the argument itself
+  }
+  
+  if (exponent == 0) {
+    fraction <<= 1;               // Denormalized value, increase the fraction field by shifting left
+  } else {
+    exponent++;                   // Normalized value, increment the exponent field
+  }
+  return (sign | (exponent << 23) | fraction);  // Combine the sign, exponent, and fraction to form the result
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
