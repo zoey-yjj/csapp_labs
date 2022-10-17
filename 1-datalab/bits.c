@@ -296,6 +296,11 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
+  /*
+   * IEEE 754
+   * sign exponent                fraction
+   *    0 10000010 01000000000000000000000
+   */
   unsigned sign = uf & 0x80000000;              // Extract the sign bit 0x1000, sign = 1 bit
   unsigned exponent = (uf & 0x7F800000) >> 23;  // Extract the exponent field 0x0111 1111 1000, exponent = 8 bits
   unsigned fraction = uf & 0x007FFFFF;          // Extract the fraction field, fraction = 23 bits
@@ -324,7 +329,23 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+  int sign = uf >> 31;
+  int exp = ((uf >> 23) & 0xff) - 127;
+  int frac = (uf & 0x007fffff) | 0x00800000;
+  int value = 0;
+
+  if (exp < 0) {
+    return 0;
+  } else if (exp > 30) {
+    return 0x80000000;
+  } 
+  
+  if (exp < 23) {
+    value = frac >> (23 - exp);
+  } else if (exp > 23) {
+    value = frac << (exp - 23);
+  }
+  return sign ? -value : value;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
