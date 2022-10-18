@@ -57,6 +57,7 @@
     (gdb) r
     (gdb) p/s (char*)$rdi
     (gdb) p/s (char*)$rsi
+    $2 = 0x402400 "Border relations with Canada have never been better."
     ```
 
 ## **phase 2**
