@@ -62,6 +62,50 @@
 
 ## **phase 2**
 
+- find `phase_2` in assembly code
+
+- in `<phase_2>` there is a line `<read_six_numbers>`
+
+- debut using `gdb`
+
+    ```properties
+    (gdb) break *0x400f0a
+    (gdb) r
+    Border relations with Canada have never been better.
+    1 1 1 1 1 1
+    (gdb) x $rsp
+    0x7fffffffea30: 0x00000001
+    ```
+
+- check `<phase_2>` assembly code for solution
+
+    ```properties
+    cmpl $0x1,(%rsp)        -> arr[0] == 1
+    jne explode_bomb
+    L1:
+    lea 0x4(%rsp),%rbx      -> rbx = arr[1]
+    lea 0x18(%rsp),%rbp     -> rbp = arr[6]
+    L2:
+    mov -0x4(%rbx),%eax     -> eax = arr[?-1] 
+    add %eax,%eax           -> eax += eax
+    cmp %eax,(%rbx)         -> cmp arr[?],arr[?-1]
+    jne explode_bomb
+    add $0x4,%rbx           -> arr[?+1]
+    cmp %rbp,%rbx
+    jne L2 
+    ```
+
+- figure out the function 
+
+    ```properties
+    if(arr[0]!=0) bomb()
+    for(int i=1;i<6;i++){
+        if(arr[i-1]*2 != arr[i]) bomb()
+    }
+    ```
+
+- come up with solution `1 2 4 8 16 32`
+
 ## **phase 3**
 
 ## **phase 4**
