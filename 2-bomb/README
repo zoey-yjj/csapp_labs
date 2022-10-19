@@ -108,6 +108,57 @@
 
 ## **phase 3**
 
+- find number of input
+
+    ```properties
+    (gdb) break *0x400f60
+    (gdb) run
+    (gdb) info r eax
+    eax            0x2                 0
+    ```
+
+    eax = 0x2 so that input should be 2
+
+- find place where used to store input values
+
+    ```properties
+    400f6a:	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp)       // 0x8(%rsp) should be <= 7
+    400f6f:	77 3c                	ja     400fad <phase_3+0x6a>
+    ```
+
+    ```properties
+    read 0x8(%rsp)
+    (gdb) x $rsp+0x8
+    0x7fffffffea58:  0x00000000     // 0x8(%rsp) is the first variable
+    (gdb) x $rsp+0x8+0x4
+    0x7fffffffea5c:  0x00000001     // 0xc(%rsp) is the second variable
+    ```
+
+- read value from 0x402470[0..7], which are the ranges of jump
+
+    ```properties
+    (gdb) x/8xg 0x402470
+    0x402470:   0x0000000000400f7c  0x0000000000400fb9
+    0x402480:   0x0000000000400f83  0x0000000000400f8a
+    0x402490:   0x0000000000400f91  0x0000000000400f98
+    0x4024a0:   0x0000000000400f9f  0x0000000000400fa6
+    ```
+
+- check to the assembly code and find out the value stored in %eax
+
+    ```properties
+    0x0000000000400f7c      0xcf1
+    0x0000000000400fb9      0x1372
+    0x0000000000400f83      0x2c33
+    0x0000000000400f8a      0x1004
+    0x0000000000400f91      0x1855
+    0x0000000000400f98      0xce6
+    0x0000000000400f9f      0x2aa7
+    0x0000000000400fa6      0x147
+    ```
+
+- choose any pair of solution, eg `7 0x146`
+
 ## **phase 4**
 
 ## **phase 5**
