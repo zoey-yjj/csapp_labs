@@ -1,6 +1,8 @@
 # Attack Lab
 
-## level 1
+## Part 1
+
+### level 1
 
 1. get assembly code
 
@@ -44,7 +46,7 @@
     ./hex2raw < ctarget.1.txt | ./ctarget -q
     ```
 
-## level 2
+### level 2
 
 1. in assembly code find touch2
 
@@ -83,3 +85,23 @@
 
 5. get the %rsp address, and then write the injection string. The string is the injection code address + useless characters + return address.
 
+### level 3
+
+1. set break in test, check %rsp
+
+    ```
+    (gdb) break *0x40196c
+    (gdb) run -q
+    (gdb) info r rsp 
+    ```
+
+2. get disassembly
+
+    ```
+    gcc -c l3.s
+    objdump -d l3.o
+    ```
+4. use `man ascii` get hexadecimal of the cookie
+
+
+## Part 2
